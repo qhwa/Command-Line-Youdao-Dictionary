@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+require 'net/http'
+require 'rexml/document'
+
+include REXML
+
+res = Net::HTTP.get( "dict.youdao.com", "/fsearch?q=#{ARGV[0]}" )
+xml = Document.new res
+puts "dict:"
+XPath.each(xml, '//translation/content') do |node|
+    puts node.text
+end
+puts "web translattion:"
+XPath.each(xml, '//yodao-web-dict/web-translation') do |node|
+    key = XPath.first( node, 'key/')
+    puts "------ #{key.text} ------"
+    XPath.each(node, 'trans/value/') do |val|
+        puts val.text
+    end
+end
