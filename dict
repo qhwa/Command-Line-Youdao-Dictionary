@@ -10,13 +10,15 @@ res = Net::HTTP.get( "dict.youdao.com", "/fsearch?q=#{ARGV[0]}" )
 xml = Document.new res
 puts "dict:"
 XPath.each(xml, '//translation/content') do |node|
-    puts node.text
+    puts "  \e[32m#{node.text}\e[0m"
 end
 puts "web translattion:"
 XPath.each(xml, '//yodao-web-dict/web-translation') do |node|
     key = XPath.first( node, 'key/')
     puts "------ #{key.text} ------"
     XPath.each(node, 'trans/value/') do |val|
-        puts val.text
+        puts " " * 2 << val.text
     end
 end
+
+
