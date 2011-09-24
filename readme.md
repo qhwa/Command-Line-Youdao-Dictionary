@@ -17,5 +17,8 @@
   ~~~
 
 建议用alias简化，例如在$HOME/.bashrc或$HOME/.profile中加入
-~~~alias d="/path/to/dict"~~~
+
+  ~~~shell
+  alias d="/path/to/dict"
+  ~~~
 
