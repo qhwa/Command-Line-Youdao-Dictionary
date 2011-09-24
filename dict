@@ -6,19 +6,27 @@ require 'rexml/document'
 
 include REXML
 
-res = Net::HTTP.get( "dict.youdao.com", "/fsearch?q=#{ARGV[0]}" )
-xml = Document.new res
-puts "dict:"
-XPath.each(xml, '//translation/content') do |node|
+def translate(word)
+  return if word.nil? or word.empty?
+  xml = Document.new(Net::HTTP.get( "dict.youdao.com", "/fsearch?q=#{word}" ))
+
+  title " dict translation: #{word} ", "="
+  XPath.each(xml, '//translation/content') do |node|
     puts "  \e[32m#{node.text}\e[0m"
-end
-puts "web translattion:"
-XPath.each(xml, '//yodao-web-dict/web-translation') do |node|
-    key = XPath.first( node, 'key/')
-    puts "------ #{key.text} ------"
+  end
+
+  title " web translation ", "="
+  XPath.each(xml, '//yodao-web-dict/web-translation') do |node|
+    title XPath.first( node, 'key/').text
     XPath.each(node, 'trans/value/') do |val|
-        puts " " * 2 << val.text
+      puts ' ' * 2 << val.text
     end
+  end
+
 end
 
+def title(title, sep=?-, len=30 )
+  puts title.center(len, sep)
+end
 
+translate(ARGV[0])
