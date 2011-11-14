@@ -7,26 +7,39 @@ require 'rexml/document'
 include REXML
 
 def translate(word)
-  return if word.nil? or word.empty?
-  xml = Document.new(Net::HTTP.get( "dict.youdao.com", "/fsearch?q=#{word}" ))
-
-  title " dict translation: #{word} ", "="
-  XPath.each(xml, '//translation/content') do |node|
-    puts "  \e[32m#{node.text}\e[0m"
+  unless word.nil? or word.empty?
+    __ "dict translation: #{word}", "="
+    parse Net::HTTP.get( "dict.youdao.com", "/fsearch?q=#{word}" )
   end
-
-  title " web translation ", "="
-  XPath.each(xml, '//yodao-web-dict/web-translation') do |node|
-    title XPath.first( node, 'key/').text
-    XPath.each(node, 'trans/value/') do |val|
-      puts ' ' * 2 << val.text
-    end
-  end
-
 end
 
-def title(t, sep='-', len=30 )
-  puts t.center(len, sep)
+def parse(src)
+  xml = Document.new(src)
+
+  xml.each_node('//translation/content') { |node|
+    puts "  \e[32m#{node.text}\e[0m"
+  }
+
+  __ "web translation", "="
+
+  xml.each_node('//yodao-web-dict/web-translation') { |node|
+    __ node.first_node('key/').text
+    node.each_node('trans/value/') { |val|
+      puts "  #{val.text}"
+    }
+  }
+  
+end
+
+def __(t, pad='-', len=30 )
+  puts " #{t} ".center(len, pad)
+end
+
+# REXML::Element patch
+# for better readablitiy
+class Element
+  def each_node(path, &block); XPath.each(self, path, &block); end
+  def first_node(path); XPath.first(self, path); end
 end
 
 translate(ARGV[0])
