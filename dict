@@ -25,8 +25,8 @@ def translate(word)
 
 end
 
-def title(title, sep=?-, len=30 )
-  puts title.center(len, sep)
+def title(t, sep='-', len=30 )
+  puts t.center(len, sep)
 end
 
 translate(ARGV[0])
