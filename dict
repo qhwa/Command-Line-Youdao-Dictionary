@@ -16,6 +16,11 @@ end
 def parse(src)
   xml = Document.new(src)
 
+  # “Ù±Í
+  xml.each_node('//phonetic-symbol') { |node|
+    puts "  \e[36m[#{node.text}]\e[0m" if node.text
+  }
+
   xml.each_node('//translation/content') { |node|
     puts "  \e[32m#{node.text}\e[0m"
   }
