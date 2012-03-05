@@ -15,29 +15,45 @@ end
 
 def parse(src)
   xml = Document.new(src)
-
-  # “Ù±Í
-  xml.each_node('//phonetic-symbol') { |node|
-    puts "  \e[36m[#{node.text}]\e[0m" if node.text
-  }
-
-  xml.each_node('//translation/content') { |node|
-    puts "  \e[32m#{node.text}\e[0m"
-  }
+  parse_phonetic_symbol xml
+  parse_dict_trans      xml
 
   __ "web translation", "="
+  parse_web_trans       xml
+end
 
+def parse_phonetic_symbol( xml )
+  xml.each_node('//phonetic-symbol') { |node|
+    if node.text
+      indent
+      puts "[#{node.text}]".cyan
+    end
+  }
+end
+
+def parse_dict_trans( xml )
+  xml.each_node('//translation/content') { |node|
+    indent
+    puts node.text.green
+  }
+end
+
+def parse_web_trans( xml )
   xml.each_node('//yodao-web-dict/web-translation') { |node|
     __ node.first_node('key/').text
     node.each_node('trans/value/') { |val|
-      puts "  #{val.text}"
+      indent
+      puts val.text
     }
   }
-  
 end
 
 def __(t, pad='-', len=30 )
   puts " #{t} ".center(len, pad)
+end
+
+def indent(idt=2)
+  print " " * idt
 end
 
 # REXML::Element patch
@@ -47,4 +63,17 @@ class Element
   def first_node(path); XPath.first(self, path); end
 end
 
-translate(ARGV[0])
+class String
+  COLORS = %w(black red green yellow blue magenta cyan white)
+  COLORS.each_with_index do |color, idx|
+    define_method color do
+      "\e[3#{idx}m" << self.to_s << "\e[0m"
+    end
+
+    define_method "#{color}_bg" do
+      "\e[4#{idx}m" << self.to_s << "\e[0m"
+    end
+  end
+end
+
+translate(ARGV[0]) if __FILE__ == $0
