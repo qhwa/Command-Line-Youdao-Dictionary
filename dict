@@ -4,63 +4,79 @@
 require 'net/http'
 require 'rexml/document'
 
-include REXML
+class YoudaoDict
 
-def translate(word)
-  unless word.nil? or word.empty?
-    __ "dict translation: #{word}", "="
-    parse Net::HTTP.get( "dict.youdao.com", "/fsearch?q=#{word}" )
-  end
-end
-
-def parse(src)
-  xml = Document.new(src)
-  parse_phonetic_symbol xml
-  parse_dict_trans      xml
-
-  __ "web translation", "="
-  parse_web_trans       xml
-end
-
-def parse_phonetic_symbol( xml )
-  xml.each_node('//phonetic-symbol') { |node|
-    if node.text
-      indent
-      puts "[#{node.text}]".cyan
+  def translate(word)
+    if word && !word.empty?
+      @word = word
+      parse Net::HTTP.get( "dict.youdao.com", "/fsearch?q=#{word}" )
     end
-  }
+  end
+
+  def parse(src)
+    xml = REXML::Document.new(src)
+    parse_phonetic_symbol xml
+
+    __ "辞典翻译: #{@word}", "="
+    parse_dict_trans      xml
+
+    __ "网络释义", "="
+    parse_web_trans       xml
+  end
+
+  protected
+    # 音标
+    def parse_phonetic_symbol( xml )
+      xml.each_node('//phonetic-symbol') do |node|
+        if node.text
+          indent
+          print @word
+          puts " [#{node.text}]".cyan
+        end
+      end
+    end
+
+    # 辞典
+    def parse_dict_trans( xml )
+      xml.each_node('//translation/content') do |node|
+        indent
+        puts node.text.green
+      end
+    end
+
+    # 网络释义
+    def parse_web_trans( xml )
+      xml.each_node('//yodao-web-dict/web-translation') do |node|
+        __ node.first_node('key/').text
+        node.each_node('trans/value/') do |val|
+          indent
+          puts val.text
+        end
+      end
+    end
+
+  private
+    def __(t, pad='-', len=30 )
+      puts " #{t} ".center(len, pad)
+    end
+
+    def indent(idt=2)
+      print " " * idt
+    end
+
 end
 
-def parse_dict_trans( xml )
-  xml.each_node('//translation/content') { |node|
-    indent
-    puts node.text.green
-  }
-end
+##################################
+######## Helper classes ##########
+##################################
 
-def parse_web_trans( xml )
-  xml.each_node('//yodao-web-dict/web-translation') { |node|
-    __ node.first_node('key/').text
-    node.each_node('trans/value/') { |val|
-      indent
-      puts val.text
-    }
-  }
-end
-
-def __(t, pad='-', len=30 )
-  puts " #{t} ".center(len, pad)
-end
-
-def indent(idt=2)
-  print " " * idt
-end
-
-# REXML::Element patch
-# for better readablitiy
-class Element
-  def each_node(path, &block); XPath.each(self, path, &block); end
-  def first_node(path); XPath.first(self, path); end
+module REXML
+  # REXML::Element patch
+  # for better readablitiy
+  class Element
+    def each_node(path, &block); XPath.each(self, path, &block); end
+    def first_node(path); XPath.first(self, path); end
+  end
 end
 
 class String
@@ -76,4 +92,5 @@ class String
   end
 end
 
-translate(ARGV[0]) if __FILE__ == $0
+## script entrace
+YoudaoDict.new.translate(ARGV.join ' ') if __FILE__ == $0
