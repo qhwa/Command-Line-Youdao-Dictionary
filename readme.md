@@ -6,7 +6,8 @@
 ## 安装
 
 ```shell
-curl https://raw.githubusercontent.com/qhwa/Command-Line-Youdao-Dictionary/master/dict -o dict
+# 你可能需要一个代理服务器
+wget https://raw.githubusercontent.com/qhwa/Command-Line-Youdao-Dictionary/master/dict
 chmod a+x dict
 mv dict /usr/local/dict # 如果希望全局可以使用
 ```
