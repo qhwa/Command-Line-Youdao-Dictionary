@@ -25,6 +25,6 @@ dict cake
 dict 蛋糕
 ```
 
-## 截图
+## demo
 
 <img src="https://user-images.githubusercontent.com/43009/29802165-4153d614-8ca6-11e7-823a-08f89553afdd.png" width="500" />
