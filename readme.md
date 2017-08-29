@@ -5,7 +5,7 @@
 
 ## 安装
 
-```console
+```shell
 curl https://raw.githubusercontent.com/qhwa/Command-Line-Youdao-Dictionary/master/dict -o dict
 chmod a+x dict
 mv dict /usr/local/dict # 如果希望全局可以使用
@@ -13,17 +13,17 @@ mv dict /usr/local/dict # 如果希望全局可以使用
 
 ## 使用方法
 
-~~~console
+```shell
 dict <要查询的单词>
-~~~
+```
 
 例如：
 
-~~~console
+```shell
 dict cake
 dict 蛋糕
-~~~
+```
 
 ## 截图
 
-![image](https://user-images.githubusercontent.com/43009/29802165-4153d614-8ca6-11e7-823a-08f89553afdd.png)
+<img src="https://user-images.githubusercontent.com/43009/29802165-4153d614-8ca6-11e7-823a-08f89553afdd.png" width="500" />
