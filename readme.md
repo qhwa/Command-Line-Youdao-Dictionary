@@ -6,7 +6,7 @@
 ## 安装
 
 ```console
-curl https://raw.githubusercontent.com/qhwa/Command-Line-Youdao-Dictionary/master/dict -O dict
+curl https://raw.githubusercontent.com/qhwa/Command-Line-Youdao-Dictionary/master/dict -o dict
 chmod a+x dict
 mv dict /usr/local/dict # 如果希望全局可以使用
 ```
