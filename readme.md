@@ -37,8 +37,8 @@ mv dict /usr/local/dict # 如果希望全局可以使用
     ```
 
     ```shell
-    # 英式发音
-    dict -v -a 2 microscope
+    # 英式发音 (default)
+    dict -v -a 1 microscope
 
     # 美式发音
     dict -v -a 2 microscope
