@@ -12,6 +12,8 @@ chmod a+x dict
 mv dict /usr/local/dict # 如果希望全局可以使用
 ```
 
+可选: 发音功能需要安装 [mpg123](https://www.mpg123.de/), 可以通过 [homebrew](https://brew.sh/), [apt-get](https://linux.die.net/man/8/apt-get) 等包管理工具
+
 ## 使用方法
 
 1. 简单用法
