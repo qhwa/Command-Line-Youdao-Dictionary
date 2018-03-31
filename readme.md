@@ -14,16 +14,35 @@ mv dict /usr/local/dict # 如果希望全局可以使用
 
 ## 使用方法
 
-```shell
-dict <要查询的单词>
-```
+1. 简单用法
 
-例如：
+    ```shell
+    dict <要查询的单词>
+    ```
 
-```shell
-dict cake
-dict 蛋糕
-```
+    例如：
+
+    ```shell
+    dict cake
+    dict 蛋糕
+    ```
+
+2. 发音
+
+    英文的单词和词组可以发音，支持美式/英式发音。
+    如需发音，需要先安装 [mpg123](https://www.mpg123.de/)
+
+    ```shell
+    dict -v give birth to
+    ```
+
+    ```shell
+    # 英式发音
+    dict -v -a 2 microscope
+
+    # 美式发音
+    dict -v -a 2 microscope
+    ```
 
 ## demo
 

@@ -1,15 +1,24 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
-require 'net/http'
 require 'rexml/document'
+require 'optparse'
+require 'open-uri'
 
 class YoudaoDict
 
-  def translate(word)
-    if word && !word.empty?
-      @word = word
-      parse Net::HTTP.get( "dict.youdao.com", "/fsearch?q=#{word}" )
+  def initialize(options = {})
+    @options = options
+    @word    = options[:word]
+  end
+
+  def translate
+    if @word && !@word.empty?
+      open("https://dict.youdao.com/fsearch?q=#{URI.escape @word}") do |src|
+        parse src
+      end
+
+      play_voice if @options[:voice]
     end
   end
 
@@ -23,6 +32,7 @@ class YoudaoDict
     __ "网络释义", "="
     parse_web_trans       xml
   end
+
 
   protected
     # 音标
@@ -64,6 +74,14 @@ class YoudaoDict
       print " " * idt
     end
 
+
+  def play_voice
+    url = "http://dict.youdao.com/dictvoice?audio=#{URI.escape @word}&type=#{@options[:accent]}"
+    system "/usr/local/bin/mpg123", "-q", "--", url
+  end
+  
+  public :play_voice
+
 end
 
 ##################################
@@ -92,5 +110,30 @@ class String
   end
 end
 
+
+class YoudaoDict::CLI
+
+  def initialize
+
+    options = {accent: 1}
+
+    parser = OptionParser.new do |o|
+      o.banner = "Usage: dict <word> [options]"
+
+      o.on("-v", "--voice", "play voice") do
+        options[:voice] = true
+      end
+
+      o.on("-a", "--accent=acent", "accent of voice, can either be `1` (UK) or `2` (US)") do |a|
+        options[:accent] = a
+      end
+    end
+
+    options[:word] = parser.parse(ARGV).join(' ')
+
+    YoudaoDict.new(options).translate
+  end
+end
+
 ## script entrace
-YoudaoDict.new.translate(ARGV.join ' ') if __FILE__ == $0
+YoudaoDict::CLI.new if __FILE__ == $0
