@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 require 'rexml/document'
-require 'open3'
 require 'optparse'
 require 'open-uri'
 
