@@ -19,7 +19,7 @@ class YoudaoDict
         parse src
       end
 
-      play_voice @word if @options[:voice]
+      play_voice if @options[:voice]
     end
   end
 
@@ -76,15 +76,9 @@ class YoudaoDict
     end
 
 
-  def play_voice(word)
-    url = "https://dict.youdao.com/dictvoice?audio=#{URI.escape word}&type=#{@options[:accent]}"
-    open(url) do |content|
-      Open3.popen2("mpg123 -q -- -") do |i, o, t|
-        i.print content.read
-        i.close
-        print o.read
-      end
-    end
+  def play_voice
+    url = "http://dict.youdao.com/dictvoice?audio=#{URI.escape @word}&type=#{@options[:accent]}"
+    system "/usr/local/bin/mpg123", "-q", "--", url
   end
   
   public :play_voice
