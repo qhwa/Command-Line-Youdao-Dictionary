@@ -12,7 +12,8 @@ chmod a+x dict
 mv dict /usr/local/bin/dict # 如果希望全局可以使用
 ```
 
-可选: 发音功能需要安装 [mpg123](https://www.mpg123.de/), 可以通过 [homebrew](https://brew.sh/), [apt-get](https://linux.die.net/man/8/apt-get) 等包管理工具
+可选: 发音功能需要安装 [mpg123](https://www.mpg123.de/)
+<br/><small>(可以通过 [homebrew](https://brew.sh/), [apt-get](https://linux.die.net/man/8/apt-get) 等包管理工具安装)</small>
 
 ## 使用方法
 
@@ -44,6 +45,14 @@ mv dict /usr/local/bin/dict # 如果希望全局可以使用
 
     # 美式发音
     dict -v -a 2 microscope
+    ```
+
+3. 完整命令行参数
+
+    ```sh
+    dict <word> [options]
+        -v, --voice         play voice
+        -a, --accent=acent  accent of voice, can either be `1` (UK) or `2` (US)
     ```
 
 ## demo
