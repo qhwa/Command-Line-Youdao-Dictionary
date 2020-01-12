@@ -14,7 +14,7 @@ class YoudaoDict
 
   def translate
     if @word && !@word.empty?
-      open("https://dict.youdao.com/fsearch?q=#{URI.escape @word}") do |src|
+      URI.open("https://dict.youdao.com/fsearch?q=#{URI.encode_www_form [@word]}") do |src|
         parse src
       end
 
