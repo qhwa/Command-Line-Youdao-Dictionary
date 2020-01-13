@@ -76,7 +76,7 @@ class YoudaoDict
 
 
   def play_voice
-    url = "http://dict.youdao.com/dictvoice?audio=#{URI.escape @word}&type=#{@options[:accent]}"
+    url = "http://dict.youdao.com/dictvoice?audio=#{URI.encode_www_form [@word]}&type=#{@options[:accent]}"
     system "mpg123", "-q", "--", url
   end
   
